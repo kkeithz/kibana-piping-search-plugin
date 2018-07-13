@@ -1,13 +1,17 @@
 # Piping Search Plugin for kibana
 > Provide another searching method with piping and post processing of data
 
+## Screenshot
+![Screenshot1](https://github.com/kkeithz/kibana-piping-search-plugin/blob/master/screenshot/screenshot1.png?raw=true)
+![Screenshot2](https://github.com/kkeithz/kibana-piping-search-plugin/blob/master/screenshot/screenshot2.png?raw=true)
+
 ## Usage
-Install [piping-search-elasticsearch](https://) plugin in Elasticsearch 6.3.1
+Install [piping-search-elasticsearch](https://github.com/kkeithz/elasticsearch-piping-search-plugin) plugin in Elasticsearch 6.3.1
 Install plugin in kibana 6.3.1
   - `bin/kibana-plugin install [url]`
 
 ## Searching Pattern
-Refer to Elasticsearch plugin [piping-search-elasticsearch](https://)
+Refer to Elasticsearch plugin [piping-search-elasticsearch](https://github.com/kkeithz/elasticsearch-piping-search-plugin)
 
 ## Development
 See the [kibana contributing guide](https://github.com/elastic/kibana/blob/master/CONTRIBUTING.md) for instructions setting up your development environment. Once you have completed that, use the following yarn scripts.
