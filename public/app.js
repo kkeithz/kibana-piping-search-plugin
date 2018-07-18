@@ -20,11 +20,20 @@ app.config(stateManagementConfigProvider =>
   stateManagementConfigProvider.disable()
 );
 
-function RootController($scope, $element, $http) {
+function RootController($scope, $element, $http, $compile, $timeout, timefilter) {
   const domNode = $element[0];
 
   // render react to DOM
-  render(<Main title="pipingSearchPlugin" httpClient={$http} />, domNode);
+  render(<Main title="pipingSearchPlugin" 
+      $kibana={{
+        $http:$http,
+        $scope:$scope,
+        $compile:$compile,
+        $timeout:$timeout,
+        timefilter:timefilter,
+      }}
+    />
+    , domNode);
 
   // unmount react on controller destroy
   $scope.$on('$destroy', () => {

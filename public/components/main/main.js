@@ -1,116 +1,60 @@
 import React from "react";
-import {
-  EuiPage,
-  EuiPageBody,
-  EuiPageContent,
-  EuiPageContentBody,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiFieldSearch,
-  EuiButtonIcon,
-  EuiSelect
-} from "@elastic/eui";
-import { TimeFilter } from './timefilter';
-import { Display } from "../display/display";
+import { TopNav } from './topnav';
+import { Search } from "./search";
 
 export class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: "",
-      data: [],
-      chartType: "Table",
+      selectedTabId: 'search',
     };
+    this.component = null;
+    this.tabs = [{
+      id: 'search',
+      name: 'Search',
+      disabled: false,
+      component: <Search ref={(c)=>{ this.component=c }}
+        $kibana={this.props.$kibana}
+      />,
+    }];
   }
-
   componentDidMount() {
   }
-  search(){
-    const { httpClient } = this.props;
-    httpClient.post("../api/piping-search-plugin/search", {
-      query: this.state.query,
-      date_range: {
-        field: "@timestamp",
-        from: this.refs.timefilter.state.startDate,
-        to: this.refs.timefilter.state.endDate,
+  getTabComponent(){
+    for(var i=0; i<this.tabs.length; i++){
+      if(this.tabs[i].id === this.state.selectedTabId){
+        return this.tabs[i].component;
       }
-    })
-    .then((resp) => {
-      if(resp.status == 200 && 
-        resp.data.results != null
-      ){
-        //this.refs.table.setData(resp.data.results);
-        this.setState({
-          data: resp.data.results
-        });
-      }else{
-        //this.refs.table.setData([]);
-        this.setState({
-          data: []
-        });
-      }
+    }
+    return null;
+  }
+  onTabSelected(id){
+    this.setState({
+      selectedTabId: id
     });
   }
-  onChange(e){
-    this.setState({
-      query: e.target.value
-    });
+  onRefresh(){
+    if(this.component != null && this.component.refresh != null){
+      this.component.refresh();
+    }
   }
-  onChangeTypeChange(e){
-    this.setState({
-      chartType: e.target.value
-    });
+  onTimeUpdate(time){
+    if(this.component != null && this.component.timeUpdate != null){
+      this.component.timeUpdate(time);
+    }
   }
   render() {
-    const { title } = this.props;
     return (
-      <EuiPage className="custom-plugin">
-        <EuiPageBody>
-          <EuiPageContent>
-            <EuiPageContentBody>
-              <EuiFlexGroup alignItems="center">
-                <EuiFlexItem>
-                </EuiFlexItem>
-                <EuiFlexItem grow={false}>
-                  <TimeFilter ref="timefilter" />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-              <EuiFlexGroup alignItems="center">
-                <EuiFlexItem>
-                  <EuiFieldSearch 
-                    placeholder="Search..." 
-                    value={this.state.query}
-                    onChange={this.onChange.bind(this)}
-                    fullWidth 
-                    compressed />
-                </EuiFlexItem>
-                <EuiFlexItem grow={false}>
-                  <EuiButtonIcon iconType="search" onClick={this.search.bind(this)} />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-              <EuiFlexGroup>
-                <EuiFlexItem grow={false}>
-                  <EuiSelect
-                    options={[
-                      { value: 'Table', text: 'Table' },
-                      { value: 'Bar Chart', text: 'Bar Chart' },
-                      { value: 'Line Chart', text: 'Line Chart' },
-                      { value: 'Pie Chart', text: 'Pie Chart' },
-                    ]}
-                    value={this.state.chartType}
-                    onChange={this.onChangeTypeChange.bind(this)}
-                  />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-              <EuiFlexGroup>
-                <EuiFlexItem style={{overflow:'hidden',minHeight:'300px'}}>
-                  <Display data={this.state.data} chartType={this.state.chartType} />
-                </EuiFlexItem>
-              </EuiFlexGroup>
-            </EuiPageContentBody>
-          </EuiPageContent>
-        </EuiPageBody>
-      </EuiPage>
+      <div className="piping-search">
+        <TopNav 
+          $kibana={this.props.$kibana}
+          tabs={this.tabs}
+          onTabSelected={this.onTabSelected.bind(this)}
+          onRefresh={this.onRefresh.bind(this)}
+          onTimeUpdate={this.onTimeUpdate.bind(this)}
+        />
+        {this.getTabComponent()}
+      </div>
     );
   }
   

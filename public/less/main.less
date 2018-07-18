@@ -2,8 +2,23 @@
   margin-top: 30px;
 }
 
-.custom-plugin{
-  &.euiPage{
+.piping-search{
+  .kuiLocalNav{
+    min-height: unset;
+    .kuiLocalDropdown{
+      margin-bottom: 0;
+    }
+    .kuiLocalNavRow--secondary{
+      display: none;
+    }
+    .euiTabs{
+      border-bottom:none;
+    }
+  }
+}
+
+.piping-search{
+  .euiPage{
     padding:0;
   }
   .euiPageBody > .euiPanel{
