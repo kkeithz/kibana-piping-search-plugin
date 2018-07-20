@@ -1,6 +1,7 @@
 import React from "react";
 import { TopNav } from './topnav';
 import { Search } from "./search";
+import { Lookup } from "./lookup";
 
 export class Main extends React.Component {
   constructor(props) {
@@ -13,7 +14,18 @@ export class Main extends React.Component {
       id: 'search',
       name: 'Search',
       disabled: false,
+      autoRefresh: true,
+      timefilter: true,
       component: <Search ref={(c)=>{ this.component=c }}
+        $kibana={this.props.$kibana}
+      />,
+    },{
+      id: 'lookup',
+      name: 'Lookup',
+      disabled: false,
+      autoRefresh: false,
+      timefilter: false,
+      component: <Lookup ref={(c)=>{ this.component=c }} 
         $kibana={this.props.$kibana}
       />,
     }];

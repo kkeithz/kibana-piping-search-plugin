@@ -6,6 +6,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import 'ui/autoload/styles';
 import './less/main.less';
 import { Main } from './components/main';
+import Service from './services/service';
 
 const app = uiModules.get("apps/pipingSearchPlugin");
 
@@ -21,6 +22,8 @@ app.config(stateManagementConfigProvider =>
 );
 
 function RootController($scope, $element, $http, $compile, $timeout, timefilter) {
+  Service.getInstance().setHttp($http);
+  
   const domNode = $element[0];
 
   // render react to DOM

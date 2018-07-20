@@ -57,7 +57,32 @@ export class TopNav extends React.Component {
     />;
     render(this.tabReact, compiled.find("#react-tab")[0]);
   }
+  getTab(id){
+    for(var i=0; i<this.props.tabs.length; i++){
+      if(this.props.tabs[i].id === id){
+        return this.props.tabs[i];
+      }
+    }
+    return null;
+  }
+  updateNav(tabId){
+    var { timefilter, $scope } = this.props.$kibana;
+    var tab = this.getTab(tabId);
+    if(tab.autoRefresh){
+      timefilter.enableAutoRefreshSelector();
+    }else{
+      timefilter.disableAutoRefreshSelector();
+    }
+    if(tab.timefilter){
+      timefilter.enableTimeRangeSelector();
+    }else{
+      timefilter.disableTimeRangeSelector();
+    }
+    //apply changes
+    $scope.$applyAsync();
+  }
   tabSelected(id){
+    this.updateNav(id);
     if(this.props.onTabSelected != null){
       this.props.onTabSelected(id);
     }

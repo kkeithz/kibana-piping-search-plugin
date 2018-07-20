@@ -17,7 +17,7 @@ export class Table extends React.Component {
         direction: "asc",
       },
       page: 0,
-      limit: 25,
+      limit: props.limit?props.limit:25,
     };
   }
   componentWillReceiveProps(nextProps){
@@ -73,19 +73,23 @@ export class Table extends React.Component {
     return this.state.displayData;
   }
   getColumns(){
-    var data = this.state.fullData;
-    var columns = [];
-    if(data != null && data.length > 0){
-      for(var key in data[0]){
-        columns.push({
-          field: key,
-          name: key,
-          sortable: true,
-          hideForMobile: false,
-        });
+    if(this.props.columns != null){
+      return this.props.columns;
+    }else{
+      var data = this.state.fullData;
+      var columns = [];
+      if(data != null && data.length > 0){
+        for(var key in data[0]){
+          columns.push({
+            field: key,
+            name: key,
+            sortable: true,
+            hideForMobile: false,
+          });
+        }
       }
+      return columns;
     }
-    return columns;
   }
   render() {
     return (

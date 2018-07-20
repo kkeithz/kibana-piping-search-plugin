@@ -11,7 +11,8 @@ import {
   EuiSelect
 } from "@elastic/eui";
 import { Display } from "../display/display";
-import datemath from '@kbn/datemath'
+import datemath from '@kbn/datemath';
+import Service from '../../services/service';
 
 export class Search extends React.Component {
   constructor(props) {
@@ -33,26 +34,21 @@ export class Search extends React.Component {
   search(){
     var { $http, timefilter } = this.props.$kibana;
 
-    $http.post("../api/piping-search-plugin/search", {
+    Service.getInstance().search({
       query: this.state.query,
       date_range: {
         field: "@timestamp",
         from: datemath.parse(timefilter.time.from).toJSON(),
         to: datemath.parse(timefilter.time.to).toJSON(),
       }
-    })
-    .then((resp) => {
-      if(resp.status == 200 && 
-        resp.data.results != null
-      ){
-        this.setState({
-          data: resp.data.results
-        });
-      }else{
-        this.setState({
-          data: []
-        });
-      }
+    }).then((data)=>{
+      this.setState({
+        data: data.results
+      });
+    }).catch((err)=>{
+      this.setState({
+        data: []
+      });
     });
   }
   onChange(e){

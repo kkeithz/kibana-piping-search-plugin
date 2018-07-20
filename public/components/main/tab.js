@@ -13,6 +13,7 @@ export class Tab extends React.Component {
     };
   }
   componentDidMount() {
+    this.props.onTabSelected(this.state.selectedTabId);
   }
   onSelectedTabChanged = id => {
     this.setState({
